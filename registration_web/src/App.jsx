@@ -16,9 +16,6 @@ function App() {
   const [password, setPassword] = useState('');
 
   const login = ()=>{
-    if(!email.includes('@')){
-      alert("email must contain @")
-    }
     console.log("email :",email);
     console.log("password :",password);
   }
