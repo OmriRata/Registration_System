@@ -15,14 +15,6 @@ function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const omriIncludes = (string,char)=>{
-      for(c in string){
-        if(c == char){
-          return true
-        }
-      }
-      return false
-  }
   const login = ()=>{
     if(!email.includes('@')){
       alert("email must contain @")
