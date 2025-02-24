@@ -10,7 +10,7 @@ import bg from './assets/Illustration.png'
 import viteLogo from '/vite.svg'
 // import './App.css'
 
-
+const url = 'https://myapp-server-egd0dadxbraxf4cj.israelcentral-01.azurewebsites.net'
 
 const Toast = ({ message, onClose }) => {
     if (!message) return null;
@@ -55,7 +55,8 @@ function App() {
   const login = async ()=>{
     console.log("email :",email);
     console.log("password :",password);
-    const response = await fetch('http://localhost:5000/login',{
+    // const response = await fetch('http://localhost:5000/login',{
+    const response = await fetch(url+'/login',{
       method:"POST",
       headers:{
         "Content-Type":"application/json"
@@ -72,7 +73,8 @@ function App() {
     }
     console.log(data)
 
-    const response_gpt = await fetch('http://localhost:5000/randomText')
+    // const response_gpt = await fetch('http://localhost:5000/randomText')
+    const response_gpt = await fetch(url+'/randomText')
     const data_random = await response_gpt.json()
     console.log(data_random)
     showToast(data_random.message)
@@ -88,7 +90,7 @@ function App() {
     <section style={{ backgroundColor: "#5769d4" }} className="min-h-screen flex items-center justify-center
           font-mono">
       <div style={{ textAlign: "center", marginTop: "50px" }}>
-            <button onClick={showToast}>Show Toast</button>
+            <button onClick={showToast}></button>
             <Toast message={toastMessage} onClose={() => setToastMessage("")} />
         </div>
       <div className="flex relative shadow-2xl bg-white rounded-2xl"> 
