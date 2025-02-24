@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
+import os
 from flask_cors import CORS
 
 
@@ -51,11 +52,11 @@ def randomText():
     print(random_text)
     return jsonify({"message": random_text})
 
-if __name__ == "__main__":
-    # app.run(debug=True)
-    print("********connecte to the server*******")
-    app.run()
-
 # if __name__ == "__main__":
-#     port = 8000  # Use Azure's assigned port
-#     app.run(host='0.0.0.0', port=port)
+#     # app.run(debug=True)
+#     print("********connecte to the server*******")
+#     app.run()
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))  # Use Azure's port, default to 8000
+    app.run(host='0.0.0.0', port=port)
