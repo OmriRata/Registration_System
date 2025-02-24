@@ -9,7 +9,6 @@ app = Flask(__name__)
 app.secret_key = "supersecretkey"  # Change this in production
 CORS(app, supports_credentials=True)  # Allow frontend requests with credentials
 
-# CORS(app, origins=["https://black-moss-077745b1e.6.azurestaticapps.net/"])
 # In-memory JSON database (user credentials)
 users_db = {
     "user1": {"password": generate_password_hash("pass123")},
@@ -46,9 +45,9 @@ def protected():
 
 @app.route("/randomText", methods=["GET"])
 def randomText():
-    # response = requests.get('http://localhost:4000/chatgpt')
-    # random_text = response.json()['response']
-    random_text = "random_text"
+    response = requests.get('http://localhost:4000/chatgpt')
+    random_text = response.json()['response']
+    # random_text = "random_text"
     print(random_text)
     return jsonify({"message": random_text})
 
@@ -57,11 +56,11 @@ def home():
     return '<h1> HOME PAGE </h1>'
 
 
-# if __name__ == "__main__":
-#     # app.run(debug=True)
-#     # print("********connecte to the server*******")
-#     app.run()
-
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))  # Use Azure's port, default to 8000
-    app.run(host='0.0.0.0', port=port)
+    app.run(debug=True)
+    print("********connecte to the server*******")
+    # app.run()
+
+# if __name__ == "__main__":
+#     port = int(os.environ.get("PORT", 8000))  # Use Azure's port, default to 8000
+#     app.run(host='0.0.0.0', port=port)

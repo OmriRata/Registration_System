@@ -8,6 +8,7 @@ import hide from './assets/Group.png'
 import logo from './assets/Logo.png'
 import bg from './assets/Illustration.png'
 import viteLogo from '/vite.svg'
+import { toast } from 'react-toastify'
 // import './App.css'
 
 // const url = 'https://myapp-server-egd0dadxbraxf4cj.israelcentral-01.azurewebsites.net'
@@ -52,11 +53,18 @@ function App() {
       }, 9000);
   };
 
+  const handleToast = async ()=>{
+    const response_gpt = await fetch('http://localhost:5000/randomText')
+    // const response_gpt = await fetch('https://myapp-server-egd0dadxbraxf4cj.israelcentral-01.azurewebsites.net/randomText')
+    const data_random = await response_gpt.json()
+    console.log(data_random)
+    showToast(data_random.message)
+  }
   const login = async ()=>{
     console.log("email :",email);
     console.log("password :",password);
-    // const response = await fetch('http://localhost:5000/login',{
-    const response = await fetch('https://myapp-server-egd0dadxbraxf4cj.israelcentral-01.azurewebsites.net/login',{
+    const response = await fetch('http://localhost:5000/login',{
+    // const response = await fetch('https://myapp-server-egd0dadxbraxf4cj.israelcentral-01.azurewebsites.net/login',{
       method:"POST",
       headers:{
         "Content-Type":"application/json"
@@ -70,14 +78,9 @@ function App() {
     if(response.status == 200){
       setIsLoggedIn(true)
       setUsername(data.username)
+      handleToast()
     }
     console.log(data)
-
-    // const response_gpt = await fetch('http://localhost:5000/randomText')
-    const response_gpt = await fetch('https://myapp-server-egd0dadxbraxf4cj.israelcentral-01.azurewebsites.net/randomText')
-    const data_random = await response_gpt.json()
-    console.log(data_random)
-    showToast(data_random.message)
   }
   const handleEmail = (event) => {
     setEmail(event.target.value);
