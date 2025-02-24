@@ -43,11 +43,13 @@ def protected():
 
 @app.route("/randomText", methods=["GET"])
 def randomText():
-    response = requests.get('http://localhost:4000/chatgpt')
-    random_text = response.json()['response']
+    # response = requests.get('http://localhost:4000/chatgpt')
+    # random_text = response.json()['response']
+    random_text = "random_text"
     print(random_text)
     return jsonify({"message": random_text})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # app.run(debug=True)
+    app.run()
 
