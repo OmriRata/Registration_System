@@ -56,7 +56,7 @@ function App() {
     console.log("email :",email);
     console.log("password :",password);
     // const response = await fetch('http://localhost:5000/login',{
-    const response = await fetch('https://myapp-server-egd0dadxbraxf4cj.israelcentral-01.azurewebsites.net/login',{
+    const response = await fetch('http://myapp-server-egd0dadxbraxf4cj.israelcentral-01.azurewebsites.net/login',{
       method:"POST",
       headers:{
         "Content-Type":"application/json"
@@ -74,7 +74,7 @@ function App() {
     console.log(data)
 
     // const response_gpt = await fetch('http://localhost:5000/randomText')
-    const response_gpt = await fetch('https://myapp-server-egd0dadxbraxf4cj.israelcentral-01.azurewebsites.net/randomText')
+    const response_gpt = await fetch('http://myapp-server-egd0dadxbraxf4cj.israelcentral-01.azurewebsites.net/randomText')
     const data_random = await response_gpt.json()
     console.log(data_random)
     showToast(data_random.message)
