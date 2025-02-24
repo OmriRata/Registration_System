@@ -2,11 +2,12 @@ from flask import Flask, request, jsonify, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
 from flask_cors import CORS
- 
+
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"  # Change this in production
-CORS(app)
+# CORS(app)
+CORS(app, origins=["https://black-moss-077745b1e.6.azurestaticapps.net/"])
 # In-memory JSON database (user credentials)
 users_db = {
     "user1": {"password": generate_password_hash("pass123")},
