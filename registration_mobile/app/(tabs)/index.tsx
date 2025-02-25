@@ -1,17 +1,22 @@
 import { Image, StyleSheet, Platform } from 'react-native';
+import Toast from 'react-native-toast-message';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import Login from '../../components/Login'
+import { View } from 'react-native';
 
 export default function HomeScreen() {
   return (
+      <>
+
         <Login/>
+         <Toast />
+      </>
   )
 }
-
 const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',

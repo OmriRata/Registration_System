@@ -11,16 +11,38 @@ app.secret_key = "supersecretkey"  # Change this in production
 CORS(app, supports_credentials=True)  # Allow frontend requests with credentials
 
 # connect to the DB 
-DB_URL = os.getenv('DB_URL')
+# DB_URL = os.getenv('DB_URL')
+DB_URL = "mongodb+srv://omrata94:OLNlVHcW2ibVjrei@cluster0.qzwlb.mongodb.net/"
+# DB_URL = "mongodb://localhost:27017/"
 client = pymongo.MongoClient(DB_URL)
 db = client.Registration_System
 users_collection = db.users
 
-# In-memory JSON database (user credentials)
-users_db = {
-    "user1": {"password": generate_password_hash("pass123")},
-    "user2": {"password": generate_password_hash("pass456")}
-}
+
+################# Add users to the Database #################
+# newUser = {
+#         "first_name":"user1",
+#         "last_name":"user1",
+#         "pwd":generate_password_hash("pass123"),
+#         "email":"user1@gmail.com",
+#     }
+# users_collection.insert_one(newUser);
+# newUser2= {
+#         "first_name":"user2",
+#         "last_name":"user2",
+#         "pwd":generate_password_hash("pass456"),
+#         "email":"user2@gmail.com",
+#     }
+# users_collection.insert_one(newUser2);
+# newUser3 = {
+#         "first_name":"user3",
+#         "last_name":"user3",
+#         "pwd":generate_password_hash("pass789"),
+#         "email":"user3@gmail.com",
+#     }
+# users_collection.insert_one(newUser3);
+
+
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -38,7 +60,9 @@ def login():
 
     session["user"] = email  # Store user session
     first_name = user["first_name"]
-    return jsonify({"message": f"Welcome, {first_name}!","username":first_name})
+    random_text = getRandomText()
+    print(random_text)
+    return jsonify({"message": f"Welcome, {first_name}!","username":first_name,"random_text":random_text})
 
 @app.route("/logout", methods=["POST"])
 def logout():
@@ -52,13 +76,14 @@ def protected():
     return jsonify({"message": f"Hello, {session['user']}! This is a protected route."})
 
 
-@app.route("/randomText", methods=["GET"])
-def randomText():
-    response = requests.get('http://localhost:4000/chatgpt')
-    random_text = response.json()['response']
+def getRandomText():
+    try:
+        response = requests.get('http://localhost:4000/chatgpt')
+        random_text = response.json()['response']
+    except:
+        return None
     # random_text = "random_text"
-    print(random_text)
-    return jsonify({"message": random_text})
+    return random_text
 
 @app.route("/", methods=["GET"])
 def home():
@@ -67,7 +92,7 @@ def home():
 
 # if __name__ == "__main__":
 #     app.run(debug=True)
-#     print("********connecte to the server*******")
+#     print("********connect to the server*******")
     # app.run()
 
 if __name__ == "__main__":

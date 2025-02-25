@@ -1,6 +1,5 @@
-  import React, { useState } from "react";
+  import React, { useState,useRef,useCallback } from "react";
   import { useFocusEffect } from 'expo-router';
-  import { useCallback } from 'react';
   import { useNavigation } from '@react-navigation/native';
   import {
     View,
@@ -11,19 +10,35 @@
     Alert,
     StyleSheet,
   } from "react-native";
+  import Toast from 'react-native-toast-message';
 
-  export const unstable_settings = {
-    tabBarHidden: true,
-  };
+  const serverURL = "http://192.168.1.173:8000"
+  const serverURLlocalhost = "http://localhost:5000"
 
   export default function App() {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
     const [password, setPassword] = useState("");
     const navigation = useNavigation();
+    const emailRef = useRef(null);
+    const passRef = useRef(null);
 
+
+    const showToast = (text1,text2) => {
+      Toast.show({
+        type: 'info',
+        text1: text1,
+        text2: text2,
+        visibilityTime: 7000,  
+
+      });
+    }
     
-
+    const clearInput = () => {
+      passRef.current.clear(); // Clears the password field
+      emailRef.current.clear(); // Clears the email field
+    };
 
     const login = async () => {
       if (!email || !password) {
@@ -31,7 +46,7 @@
         return;
       }
       try {
-        const response = await fetch("http://192.168.1.173:8000/login", {
+        const response = await fetch(serverURL+"/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -42,9 +57,10 @@
         const data = await response.json();
         
         if (response.ok) {
-          Alert.alert("Success", `Welcome, ${data.username || "User"}!`);
+          clearInput()
+          showToast(`Welcome, ${data.username}`,data.random_text )
+          // Alert.alert("Success", `Welcome, ${data.username || "User"}!`);
           // Navigate to another screen if login is successful
-          // navigation.navigate("Home");
         } else {
           Alert.alert("Login Failed", data.message || "Invalid credentials");
         }
@@ -67,6 +83,7 @@
           <View style={styles.inputContainer}>
             <Image source={require("../assets/images/Email.png")} style={styles.icon} />
             <TextInput
+              ref={emailRef}
               value={email}
               onChangeText={setEmail}
               placeholder="Email"
@@ -78,6 +95,7 @@
           <View style={styles.inputContainer}>
             <Image source={require("../assets/images/Password.png")} style={styles.icon} />
             <TextInput
+              ref={passRef}
               value={password}
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
@@ -126,6 +144,7 @@
           </TouchableOpacity>
         </View>
       </View>
+      
     );
   }
 
