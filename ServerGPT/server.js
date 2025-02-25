@@ -1,15 +1,16 @@
 const express = require("express");
 const axios = require("axios");
+const dotenv = require("dotenv");
 const { Configuration, OpenAI } = require("openai");
 
 const app = express();
 const PORT = 4000;
 const config = require('./config');
 
-
+dotenv.config()
 // OpenAI API configuration
 const openai = new OpenAI({
-    apiKey: 'sk-bquMfJU23WMdChyEuYBAXPi1-lVbqGLFWH2lmcprugT3BlbkFJi5229VuYPTJmUU_8tGYpGo-tGVsQ2fWQD9YrgHQikA',
+    apiKey: process.env.OpenAIKey,
 });
 
 // Middleware to parse JSON

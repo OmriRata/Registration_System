@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
+import pymongo
 import os
 from flask_cors import CORS
 
@@ -8,6 +9,12 @@ from flask_cors import CORS
 app = Flask(__name__)
 app.secret_key = "supersecretkey"  # Change this in production
 CORS(app, supports_credentials=True)  # Allow frontend requests with credentials
+
+# connect to the DB 
+DB_URL = os.getenv('DB_URL')
+client = pymongo.MongoClient(DB_URL)
+db = client.Registration_System
+users_collection = db.users
 
 # In-memory JSON database (user credentials)
 users_db = {
@@ -18,18 +25,20 @@ users_db = {
 @app.route("/login", methods=["POST"])
 def login():
     data = request.json
-    username = data.get("username")
+    email = data.get("email")
     password = data.get("password")
 
-    if not username or not password:
+    if not email or not password:
         return jsonify({"message": "Username and password are required"}), 400
+    
+    user = users_collection.find_one({'email':email})
 
-    user = users_db.get(username)
-    if not user or not check_password_hash(user["password"], password):
+    if not user or not check_password_hash(user["pwd"], password):
         return jsonify({"message": "Invalid username or password"}), 401
 
-    session["user"] = username  # Store user session
-    return jsonify({"message": f"Welcome, {username}!","username":username})
+    session["user"] = email  # Store user session
+    first_name = user["first_name"]
+    return jsonify({"message": f"Welcome, {first_name}!","username":first_name})
 
 @app.route("/logout", methods=["POST"])
 def logout():
@@ -56,11 +65,11 @@ def home():
     return '<h1> HOME PAGE </h1>'
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
-    print("********connecte to the server*******")
+# if __name__ == "__main__":
+#     app.run(debug=True)
+#     print("********connecte to the server*******")
     # app.run()
 
-# if __name__ == "__main__":
-#     port = int(os.environ.get("PORT", 8000))  # Use Azure's port, default to 8000
-#     app.run(host='0.0.0.0', port=port)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))  # Use Azure's port, default to 8000
+    app.run(host='0.0.0.0', port=port)

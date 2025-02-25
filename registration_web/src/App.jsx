@@ -43,6 +43,15 @@ function App() {
   const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [message, setMessage] = useState("");
+  const [timeoutID, settimeoutID] = useState();
+
+
+  const setErrorMessage = (message)=>{
+    clearTimeout(timeoutID)
+    setMessage(message)
+    settimeoutID(setTimeout(function(){setMessage("")},5000));
+}
 
   const showToast = (text) => {
       setToastMessage(text);
@@ -63,24 +72,33 @@ function App() {
   const login = async ()=>{
     console.log("email :",email);
     console.log("password :",password);
-    const response = await fetch('http://localhost:5000/login',{
-    // const response = await fetch('https://myapp-server-egd0dadxbraxf4cj.israelcentral-01.azurewebsites.net/login',{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify({
-        username:email,
-        password:password
+    try{
+      const response = await fetch('http://localhost:5000/login',{
+      // const response = await fetch('https://myapp-server-egd0dadxbraxf4cj.israelcentral-01.azurewebsites.net/login',{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+          email:email,
+          password:password
+        })
       })
-    })
-    const data = await response.json()
-    if(response.status == 200){
-      setIsLoggedIn(true)
-      setUsername(data.username)
-      handleToast()
+      const data = await response.json()
+      if(response.status == 200){
+        setIsLoggedIn(true)
+        setUsername(data.username)
+        handleToast()
+      }
+      else{
+        setErrorMessage(data.message);
+      }
+      console.log(data)
+
+    }catch(e){
+      console.log(e)
+      setErrorMessage(e.message);
     }
-    console.log(data)
   }
   const handleEmail = (event) => {
     setEmail(event.target.value);
@@ -111,6 +129,7 @@ function App() {
         <h1 style={{color:'#3949ab'}} className="text-xl  pb-5">
           Log in
         </h1>
+        {message && <p className="message text-red-600 font-bold">{message}</p>}
         <div className='w-[100%]'>
           <div className='flex flex-col justify-center gap-4'>
         <div className="flex border-1 p-1 rounded-xl  items-center text-left gap-1">
